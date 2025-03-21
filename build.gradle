@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+    id 'war' // Required for WAR packaging
+}
+
+group = 'org.app'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'javax.ws.rs:javax.ws.rs-api:2.1.1'
+
+    implementation 'org.glassfish.jersey.core:jersey-common:2.36'
+    implementation 'org.glassfish.jersey.containers:jersey-container-servlet:2.36'
+    implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.36'
+    implementation 'org.glassfish.jersey.inject:jersey-hk2:2.36'
+
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.8'
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+war {
+    archiveFileName = "app.war"
+}
+
+tasks.register('deployToTomcat', Copy) {
+    dependsOn 'war'
+    from file("$buildDir/libs/app.war")
+    into file("/var/lib/tomcat9/webapps") // Replace with your Tomcat webapps folder
+}
